@@ -1,0 +1,114 @@
+[5:06 pm, 18/02/2022] Hemanth @capgemini: package com.demo;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import junit.framework.Assert;
+
+
+@SuppressWarnings("deprecation")
+public class LearnHtmlLink {
+
+	 public  WebDriver driver;
+
+	 String url = "";
+	 String verificationError ="";
+	 
+	 @Before
+	 public void setup() {
+		 System.setProperty("webdriver.chrome.driver","C:\\selenium project\\MyFirstJavaProject\\Driver\\chromedriver.exe");
+		
+		 driver = new ChromeDriver();
+		 driver.manage().window().maximize();
+		 driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
+		 url = "http://demo.automationtesting.in/Index.html";
+	 }
+	 
+	 @Test
+	 public void getHtmlLink() {
+		 try {
+		 driver.get(url);
+	 driver.findElement(By.id("email")).sendKeys("sanathpavan@gmail.com");
+		 driver.findElement(By.xpath("//img[@id='enterimg']")).click();
+		 
+		 List<WebElement> allLinks= driver.findElements(By.tagName("a"));
+		 
+		 driver.findElement(By.tagName("a")).getSize();
+		 System.out.println("The number of links are - " + allLinks.size());
+		 
+		 for(WebElement element : allLinks) {
+			 if(!element.getText().equals("")) {
+			 System.out.println("Print the ele text - "+ element.getText());
+		 }
+		 }
+		 System.out.println("Print href attribute value");
+		 for(int i=0; i <= allLinks.size()-1;i++){
+			 if(allLinks.get(i).getAttribute("href") !=(null)) {
+				 
+			 }
+		 }
+	 System.out.println("Print href attribute value");
+	 
+	 for(int i=0; i <= allLinks.size()-1;i++){
+		 if(allLinks.get(i).getAttribute("href") !=(null) && allLinks.get(i).getAttribute("href")
+				 .equals("https://www.linkedin.com/nhome/?trk=hb_signin")){
+			 driver.navigate().to(allLinks.get(i).getAttribute("href"));
+			 Thread.sleep(5000);
+			 break;
+		 }	 
+	 }
+		 }catch (Exception ex) {
+		 System.out.println(ex.getMessage());
+		 verificationError = ex.getMessage();
+	 }
+	 }
+	 
+	 @Test
+	 public void getText() {
+		 try {
+			 driver.get(url);
+			 driver.findElement(By.xpath("//button[@id='btn2']")).click();
+			 
+			 String expectedValue1="Register";
+			 
+			 String actualValue = driver.findElement(By.xpath("//h2[text()='Register']")).getText();
+			 
+			
+			 
+			 
+			if(expectedValue1.equals(actualValue)) {
+				 System.out.println("String Matched");
+			 }else {
+				 System.out.println("String not matched");
+			 }
+			
+			String expectedValue2="123 Automation Demo site";
+			
+			String actualValue2 = driver.findElement(By.xpath("//h1a[contains(text(),'Automation Demo')]")).getText();
+			
+			Assert.assertEquals("String not matched",expectedValue2,actualValue2);
+			
+			System.out.println("when my assertion fail I am not executing");
+			
+			
+		 }catch (Exception ex) {
+			 verificationError= ex.getMessage();
+		 }
+	 }
+	 
+@After
+public void tiredown() {
+	driver.quit();
+	if(!verificationError.equals("")) {
+	Assert.fail();
+	}
+}
+}
